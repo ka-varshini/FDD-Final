@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Food Demand Forecasting</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+    }
+    
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+      background-color: #34495e;
+      border-color: #2c3e50;
+    }
+
+    .navbar-inverse .navbar-nav>li>a {
+      color: #ecf0f1;
+    }
+
+    .navbar-inverse .navbar-nav>li>a:hover {
+      background-color: #2c3e50;
+    }
+    
+    .content-container {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .btn-prediction {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 24px;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-prediction:hover {
+      background-color: #2980b9;
+      color: white;
+    }
+
+    .image-carousel {
+      margin-bottom: 30px;
+    }
+
+    .carousel-inner img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+
+    footer {
+      background-color: #34495e;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .feature-box, .benefit-box {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .feature-icon, .benefit-icon {
+            font-size: 3em;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        .stats-box {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        .faq-section {
+            margin-bottom: 30px;
+        }
+        .faq-question {
+            cursor: pointer;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .faq-answer {
+            display: none;
+            padding: 15px;
+            background-color: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        .highlight-box {
+  background-color: #e8f4fd;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.highlight-box p {
+  color: #2c3e50;
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/home">Home</a></li>
+        <li><a href="/pred">Prediction</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+  
+<div class="container content-container">    
+  <h1 class="text-center">Food Demand Forecasting</h1>
+  
+  <div id="imageCarousel" class="carousel slide image-carousel" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#imageCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#imageCarousel" data-slide-to="1"></li>
+      <li data-target="#imageCarousel" data-slide-to="2"></li>
+      <li data-target="#imageCarousel" data-slide-to="3"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="item active">
+        <img src="{{ url_for('static', filename='images/fd-homepg.jpeg') }}" alt="Restaurant Kitchen">
+      </div>
+      <div class="item">
+        <img src="{{ url_for('static', filename='images/food3.jpg') }}" alt="Food Delivery">
+      </div>
+      <div class="item">
+        <img src="{{ url_for('static', filename='images/food4.jpg') }}" alt="Restaurant Kitchen">
+      </div>
+      <div class="item">
+        <img src="{{ url_for('static', filename='images/ai-demand.jpg') }}" alt="Food Inventory">
+      </div>
+    </div>
+    <a class="left carousel-control" href="#imageCarousel" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#imageCarousel" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+  </div>
+
+  <h2 class="text-center">Key Features</h2>
+        <div class="row">
+            <div class="col-md-4 feature-box">
+                <i class="fas fa-chart-line feature-icon"></i>
+                <h3>Accurate Predictions</h3>
+                <p>Our advanced algorithms provide highly accurate demand forecasts.</p>
+            </div>
+            <div class="col-md-4 feature-box">
+                <i class="fas fa-clock feature-icon"></i>
+                <h3>Real-time Updates</h3>
+                <p>Get instant updates on demand changes and market trends.</p>
+            </div>
+            <div class="col-md-4 feature-box">
+                <i class="fas fa-cogs feature-icon"></i>
+                <h3>Easy Integration</h3>
+                <p>Seamlessly integrate with your existing inventory management systems.</p>
+            </div>
+        </div>
+
+        <h2 class="text-center">Benefits</h2>
+        <div class="row">
+            <div class="col-md-6 benefit-box">
+                <i class="fas fa-dollar-sign benefit-icon"></i>
+                <h3>Reduce Costs</h3>
+                <p>Minimize waste and optimize inventory levels.</p>
+            </div>
+            <div class="col-md-6 benefit-box">
+                <i class="fas fa-smile benefit-icon"></i>
+                <h3>Improve Customer Satisfaction</h3>
+                <p>Ensure product availability and reduce stockouts.</p>
+            </div>
+        </div>
+
+        <h2 class="text-center">Our Impact</h2>
+        <div class="row">
+            <div class="col-md-4 stats-box">
+                <i class="fas fa-percent"></i>
+                <div>95%</div>
+                <p>Forecast Accuracy</p>
+            </div>
+            <div class="col-md-4 stats-box">
+                <i class="fas fa-utensils"></i>
+                <div>1M+</div>
+                <p>Meals Optimized</p>
+            </div>
+            <div class="col-md-4 stats-box">
+                <i class="fas fa-building"></i>
+                <div>500+</div>
+                <p>Restaurants Served</p>
+            </div>
+        </div>
+
+        <h2 class="text-center">Frequently Asked Questions</h2>
+        <div class="faq-section">
+            <div class="faq-question">How accurate are your forecasts?</div>
+            <div class="faq-answer">Our forecasts typically achieve 95% accuracy, thanks to our advanced machine learning algorithms and continuous model improvements.</div>
+            
+            <div class="faq-question">How often is the forecast updated?</div>
+            <div class="faq-answer">Our system provides real-time updates, with major forecast revisions performed weekly to account for the latest trends and data.</div>
+        </div>
+
+        <h2 class="text-center">Sample Forecast</h2>
+        <canvas id="forecastChart" width="400" height="200"></canvas>
+
+        <div class="text-center" style="margin-top: 30px;">
+            <a href="/pred" class="btn btn-prediction">
+                <i class="fas fa-chart-line"></i> Try Our Prediction Tool
+            </a>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+      <p>
+        A food delivery service has to deal with a lot of perishable raw materials which makes it all, 
+        the most important factor for such a company is to accurately forecast daily and weekly demand. 
+        Too much inventory in the warehouse means more risk of wastage, and not enough could lead to 
+        out-of-stocks - and push customers to seek solutions from your competitors. 
+        The replenishment of majority of raw materials is done on weekly basis and since the raw material is perishable, 
+        the procurement planning is of utmost importance, the task is to predict the demand for the next 10 weeks.
+      </p>
+    </div>
+
+  <hr>
+  <div class="text-center">
+    <a href="/pred" class="btn btn-prediction">
+      <i class="fas fa-chart-line"></i> Go to Prediction
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>Food Demand Forecasting Project</p>
+</footer>
+
+<script>
+  // FAQ Toggle
+  document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+          const answer = question.nextElementSibling;
+          answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+      });
+  });
+
+  // Sample Chart
+  var ctx = document.getElementById('forecastChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+          datasets: [{
+              label: 'Forecasted Demand',
+              data: [12, 19, 3, 5, 2],
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1
+          }]
+      },
+      options: {
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+</script>
+
+
+</body>
+</html>

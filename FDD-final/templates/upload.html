@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Food Demand Prediction</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+      background-color: #34495e;
+      border-color: #2c3e50;
+    }
+
+    .navbar-inverse .navbar-nav>li>a {
+      color: #ecf0f1;
+    }
+
+    .navbar-inverse .navbar-nav>li>a:hover {
+      background-color: #2c3e50;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .form-container {
+      background: #fff;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      margin: 20px auto;
+      max-width: 700px;
+    }
+
+    .form-container h2 {
+      margin-bottom: 30px;
+      color: #2c3e50;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #34495e;
+    }
+
+    .form-control, .custom-select {
+      border: 2px solid #bdc3c7;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus, .custom-select:focus {
+      border-color: #3498db;
+      box-shadow: none;
+    }
+
+    .btn-primary {
+      background-color: #3498db;
+      border: none;
+      padding: 12px 20px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #2980b9;
+    }
+
+    .prediction-container {
+      background-color: #e8f4fd;
+      border: 2px solid #3498db;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 30px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .prediction-container.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .prediction-text {
+      font-size: 1.4em;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    .prediction-icon {
+      font-size: 2em;
+      color: #3498db;
+      margin-right: 10px;
+    }
+
+    footer {
+      background-color: #34495e;
+      color: #ecf0f1;
+      padding: 15px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .form-row .form-group {
+      flex: 0 0 48%;
+    }
+
+    .jumbotron {
+      background-color: rgba(52, 152, 219, 0.1);
+      margin-bottom: 0;
+      padding: 2rem 1rem;
+    }
+
+    .jumbotron h1 {
+      color: #2c3e50;
+      font-weight: bold;
+      font-size: 3rem;
+    }
+
+    .jumbotron .lead {
+      color: #34495e;
+      font-size: 2rem;
+    }
+
+    .jumbotron hr {
+      border-color: #3498db;
+    }
+
+    .jumbotron p:last-child {
+      color: #2980b9;
+      font-style: italic;
+      font-size: 2.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .jumbotron h1 {
+        font-size: 2rem;
+      }
+
+      .jumbotron .lead {
+        font-size: 1rem;
+      }
+
+      .jumbotron p:last-child {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="/home">Home</a></li>
+        <li class="active"><a href="/pred">Prediction</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" id="logoutBtn"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="jumbotron text-center">
+  <div class="container">
+    <h1 class="display-4">Welcome to Food Demand Forecasting</h1>
+    <p class="lead">
+      Predict the future of food delivery with precision! Our advanced machine learning model analyzes various factors to forecast food demand accurately. Whether you're a restaurant owner, delivery service, or food industry analyst, our tool provides valuable insights to optimize your operations and meet customer needs.
+    </p>
+    <hr class="my-4">
+    <p>
+      Enter your parameters below and let our AI-powered system calculate the projected food demand for you!
+    </p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="form-container">
+    <h2><i class="fas fa-utensils"></i> Food Demand Prediction</h2>
+    <form id="prediction-form" class="was-validated">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="homepage_featured"><i class="fas fa-star"></i> Homepage Featured</label>
+          <select class="form-control custom-select" id="homepage_featured" name="homepage_featured" required>
+            <option value="">Select option</option>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="emailer_for_promotion"><i class="fas fa-envelope"></i> Emailer for Promotion</label>
+          <select class="form-control custom-select" id="emailer_for_promotion" name="emailer_for_promotion" required>
+            <option value="">Select option</option>
+            <option value="0">No</option>
+            <option value="1">Yes</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="Op_code"><i class="fas fa-code"></i> Op Code</label>
+          <input type="number" class="form-control" id="Op_code" name="Op_code" required>
+        </div>
+        <div class="form-group">
+          <label for="city_code"><i class="fas fa-city"></i> City Code</label>
+          <input type="number" class="form-control" id="city_code" name="city_code" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="region_code"><i class="fas fa-map-marker-alt"></i> Region Code</label>
+        <input type="number" class="form-control" id="region_code" name="region_code" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cuisine"><i class="fas fa-globe-americas"></i> Cuisine</label>
+          <select class="form-control custom-select" id="cuisine" name="cuisine" required>
+            <option value="">Select cuisine</option>
+            <option value="0">Thai</option>
+            <option value="1">Indian</option>
+            <option value="2">Italian</option>
+            <option value="3">Continental</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="category"><i class="fas fa-list"></i> Category</label>
+          <select class="form-control custom-select" id="category" name="category" required>
+            <option value="">Select category</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-calculator"></i> Predict Demand</button>
+      </div>
+    </form>
+    
+    <div class="prediction-container" id="prediction-container" style="display: none;">
+      <i class="fas fa-chart-line prediction-icon"></i>
+      <span class="prediction-text">Prediction: <span id="prediction-value"></span></span>
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid text-center">
+  <p>Food Demand Forecasting Project</p>
+</footer>
+
+<script>
+$(document).ready(function() {
+  const cuisineSelect = $('#cuisine');
+  const categorySelect = $('#category');
+
+  // Define category options for each cuisine
+  const categoryOptions = {
+    '1': ['0', '1', '2', '3', '4', '5', '6', '8', '9'], // Indian
+    '0': ['0', '1', '2', '3', '5', '6'], // Thai
+    '2': ['0', '1', '2', '3', '5', '6', '7', '8', '10', '11'], // Italian
+    '3': ['0', '1', '2', '3', '5', '6', '7', '8', '12', '13'] // Continental
+  };
+
+  // Function to update category options
+  function updateCategoryOptions() {
+    const selectedCuisine = cuisineSelect.val();
+    categorySelect.empty().append('<option value="">Select category</option>');
+
+    if (selectedCuisine in categoryOptions) {
+      categoryOptions[selectedCuisine].forEach(value => {
+        categorySelect.append($('<option>', {
+          value: value,
+          text: getCategoryName(value)
+        }));
+      });
+    }
+  }
+
+  // Function to get category name
+  function getCategoryName(value) {
+    const categoryNames = {
+      '0': 'Beverages', '1': 'Extras', '2': 'Soup', '3': 'Salad',
+      '4': 'Rice Bowl', '5': 'Other Snacks', '6': 'Starters',
+      '7': 'Sandwich', '8': 'Desert', '9': 'Biryani',
+      '10': 'Pasta', '11': 'Pizza', '12': 'Fish', '13': 'Seafood'
+    };
+    return categoryNames[value] || 'Unknown';
+  }
+
+  // Add event listener to cuisine select
+  cuisineSelect.change(updateCategoryOptions);
+
+  // Initial call to populate categories based on default cuisine
+  updateCategoryOptions();
+
+  // Logout functionality
+  $('#logoutBtn').click(function(e) {
+    e.preventDefault();
+    $.ajax({
+      url: '/logout',
+      type: 'GET',
+      success: function(response) {
+        window.location.href = '/login';
+      },
+      error: function(xhr, status, error) {
+        console.error('Logout failed:', error);
+      }
+    });
+  });
+
+  // Form submission
+  $('#prediction-form').submit(function(e) {
+    e.preventDefault();
+    $.ajax({
+      url: '/predict',
+      type: 'POST',
+      data: $(this).serialize(),
+      success: function(response) {
+        $('#prediction-value').text(response.prediction.toFixed(2));
+        $('#prediction-container').show().addClass('show');
+      },
+      error: function(xhr, status, error) {
+        if (xhr.status === 401) {
+          // Unauthorized, redirect to login
+          window.location.href = '/login';
+        } else {
+          console.error('Prediction failed:', error);
+          $('#prediction-value').text('Error occurred. Please try again.');
+          $('#prediction-container').show().addClass('show');
+        }
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>

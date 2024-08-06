@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Food Demand Forecasting</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+    }
+    
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+      background-color: #34495e;
+      border-color: #2c3e50;
+    }
+
+    .navbar-inverse .navbar-nav>li>a {
+      color: #ecf0f1;
+    }
+
+    .navbar-inverse .navbar-nav>li>a:hover {
+      background-color: #2c3e50;
+    }
+    
+    .jumbotron {
+      background-color: rgba(52, 152, 219, 0.1);
+      margin-bottom: 0;
+      padding: 2rem 1rem;
+    }
+
+    .jumbotron h1 {
+      color: #2c3e50;
+      font-weight: bold;
+      font-size: 2.5rem;
+    }
+
+    .jumbotron .lead {
+      color: #34495e;
+      font-size: 1.2rem;
+    }
+
+    .jumbotron hr {
+      border-color: #3498db;
+    }
+
+    .jumbotron p:last-child {
+      color: #2980b9;
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+
+    .content-container {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .btn-prediction {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 24px;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-prediction:hover {
+      background-color: #2980b9;
+      color: white;
+    }
+
+    .image-carousel {
+      margin-bottom: 30px;
+    }
+
+    .carousel-inner img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+
+    footer {
+      background-color: #34495e;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .jumbotron h1 {
+        font-size: 2rem;
+      }
+
+      .jumbotron .lead {
+        font-size: 1rem;
+      }
+
+      .jumbotron p:last-child {
+        font-size: 0.9rem;
+      }
+    }
+
+    .highlight-box {
+      background-color: #e8f4fd;
+      border: 2px solid #3498db;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .highlight-box p {
+      color: #2c3e50;
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/home">Home</a></li>
+        <li><a href="/pred">Prediction</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="https://github.com/smartinternz02/SBSPS-Challenge-5858-Food-Demand-Forecasting-for-Food-Delivery-Company-using-IBM-Cloud">
+            <i class="fab fa-github"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="jumbotron text-center">
+  <div class="container">
+    <h1 class="display-4">Welcome to Food Demand Forecasting</h1>
+    <p class="lead">
+      Predict the future of food delivery with precision! Our advanced machine learning model analyzes various factors to forecast food demand accurately. Whether you're a restaurant owner, delivery service, or food industry analyst, our tool provides valuable insights to optimize your operations and meet customer needs.
+    </p>
+    <hr class="my-4">
+    <p>
+      Enter your parameters and let our AI-powered system calculate the projected food demand for you!
+    </p>
+  </div>
+</div>
+  
+<div class="container content-container">    
+  <h1 class="text-center">Food Demand Forecasting</h1>
+  
+  <div id="imageCarousel" class="carousel slide image-carousel" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#imageCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#imageCarousel" data-slide-to="1"></li>
+      <li data-target="#imageCarousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="item active">
+        <img src="https://source.unsplash.com/1600x900/?food,delivery" alt="Food Delivery">
+      </div>
+      <div class="item">
+        <img src="https://source.unsplash.com/1600x900/?restaurant,kitchen" alt="Restaurant Kitchen">
+      </div>
+      <div class="item">
+        <img src="https://source.unsplash.com/1600x900/?food,inventory" alt="Food Inventory">
+      </div>
+    </div>
+    <a class="left carousel-control" href="#imageCarousel" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#imageCarousel" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+  </div>
+
+  <div class="highlight-box">
+    <p>
+      A food delivery service has to deal with a lot of perishable raw materials which makes it all, 
+      the most important factor for such a company is to accurately forecast daily and weekly demand. 
+      Too much inventory in the warehouse means more risk of wastage, and not enough could lead to 
+      out-of-stocks - and push customers to seek solutions from your competitors. 
+      The replenishment of majority of raw materials is done on weekly basis and since the raw material is perishable, 
+      the procurement planning is of utmost importance, the task is to predict the demand for the next 10 weeks.
+    </p>
+  </div>
+  
+  <hr>
+  <div class="text-center">
+    <a href="/pred" class="btn btn-prediction">
+      <i class="fas fa-chart-line"></i> Go to Prediction
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>Food Demand Forecasting Project</p>
+</footer>
+
+</body>
+</html>
